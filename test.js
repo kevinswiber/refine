@@ -1,7 +1,8 @@
-var select = require('./select');
+var clarify = require('./');
+var select = clarify.select;
 var order = require('./order');
 
-extend(select);
+extend(clarify);
 
 var customers = 
   select(order.entities)
@@ -14,12 +15,12 @@ if (customers && customers.length) {
   console.dir(customerSelf);
 }
 
-function extend(select) {
-  select.Filter.prototype.rel = function(val) {
+function extend(clarify) {
+  clarify.Filter.prototype.rel = function(val) {
     return whitespaceListFilter.call(this, 'rel', val);
   };
 
-  select.Filter.prototype.class = function(val) {
+  clarify.Filter.prototype.class = function(val) {
     return whitespaceListFilter.call(this, 'class', val);
   };
 }

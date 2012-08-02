@@ -45,7 +45,7 @@ Filter.prototype.satisfies = function(predicate) {
 
 Filter.prototype.contains = function(val) {
   var that = this;
-  return this.satisfies(function(obj) { return obj[that.property].indexOf(val) > -1; });
+  return that.satisfies(function(obj) { return obj[that.property].indexOf(val) > -1; });
 };
 
 Filter.prototype.equals = function(val) {
@@ -60,11 +60,13 @@ var state = {
   done: 3
 }
 
-function Select(record) { 
+function Clarify() { }
+
+Clarify.select = function(record) { 
  return new Query(record) 
-}
+};
 
-Select.Filter = Filter;
-Select.Query = Query;
+Clarify.Filter = Filter;
+Clarify.Query = Query;
 
-module.exports = Select;
+module.exports = Clarify;

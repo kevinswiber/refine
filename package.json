@@ -1,10 +1,10 @@
 {
   "author": "Kevin Swiber <kswiber@gmail.com>",
-  "name": "hepa",
-  "description": "Hepa offers selection and filter options for JavaScript and JSON objects.",
+  "name": "clarify",
+  "description": "Clarify offers selection and filter options for JavaScript and JSON objects.",
   "version": "0.0.0",
   "repository": {
-    "url": "https://github.com/kevinswiber/hepa"
+    "url": "https://github.com/kevinswiber/clarify"
   },
   "dependencies": {},
   "devDependencies": {},
