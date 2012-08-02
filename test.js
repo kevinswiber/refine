@@ -31,3 +31,17 @@ function whitespaceListFilter(prop, val) {
   return that.satisfies(function(obj) { return obj[that.property].split(/\s/).indexOf(val) > -1; });
 };
 
+
+var rel = function(val) {
+ return function(item) {
+   if ('rel' in item && item.rel) {
+     if (item.rel.split(/\s/).indexOf(val) > - 1) {
+       return item;
+     }
+   }
+ };
+};
+
+customers = order.entities.filter(rel('http://x.io/rels/customer'));
+
+console.log('filtered', customers);
