@@ -49,11 +49,11 @@ $ npm install clarify
 ```Query#where``` creates a ```Filter``` object, with ```property``` as the property name to use when running a filter on the query.  The optional ```transformation``` parameter is a function that takes a single parameter.  This parameter is the value of the ```property```.  The transformation takes place prior to executing the filter action.  This method returns the newly created ```Filter``` object.
 
 
-### Filter.equals(val)
+### Filter#equals(val)
 
 Executes a comparison filter using the provided ```val``` string.
 
-### Filter.contains(val)
+### Filter#contains(val)
 
 Executes a contains filter using the provided ```val``` string.
 
