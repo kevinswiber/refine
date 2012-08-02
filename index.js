@@ -1,72 +1,78 @@
-function Query(record) {
-  this.record = record;
-  this.filter = null;
-  this.state = state.initialized;
-}
+(function() {
+  function Query(record) {
+    this.record = record;
+    this.filter = null;
+    this.state = state.initialized;
+  }
 
-Query.prototype.where = function(prop) {
-  this.state = state.filterProperty;
-  this.filter = new Filter(this);
-  this.filter.property = prop;
+  Query.prototype.where = function(prop) {
+    this.state = state.filterProperty;
+    this.filter = new Filter(this);
+    this.filter.property = prop;
 
-  return this.filter;
-};
+    return this.filter;
+  };
 
-function Filter(query) {
-  this.query = query;
-  this.property = '';
-  this.action = function(obj) {};
-}
+  function Filter(query) {
+    this.query = query;
+    this.property = '';
+    this.action = function(obj) {};
+  }
 
-Filter.prototype.satisfies = function(predicate) {
-  var that = this;
+  Filter.prototype.satisfies = function(predicate) {
+    var that = this;
 
-  this.action = function(obj) {
-    var res = [];
+    this.action = function(obj) {
+      var res = [];
 
-    if (Object.prototype.toString.call(obj) === '[object Array]') {
-      for(var i = 0; i < obj.length; i++) {
-        if (predicate(obj[i])) {
-          res.push(obj[i]);
+      if (Object.prototype.toString.call(obj) === '[object Array]') {
+        for(var i = 0; i < obj.length; i++) {
+          if (predicate(obj[i])) {
+            res.push(obj[i]);
+          }
         }
       }
-    }
+
+      return res;
+    };
+
+    this.query.state = state.filterAction;
+
+    var res = this.action(this.query.record);
+    this.state = state.done;
 
     return res;
   };
 
-  this.query.state = state.filterAction;
+  Filter.prototype.contains = function(val) {
+    var that = this;
+    return that.satisfies(function(obj) { return obj[that.property].indexOf(val) > -1; });
+  };
 
-  var res = this.action(this.query.record);
-  this.state = state.done;
+  Filter.prototype.equals = function(val) {
+    var that = this;
+    return that.satisfies(function(obj) { return obj[that.property] === val; });
+  };
 
-  return res;
-};
+  var state = {
+    initialized: 0,
+    filterProperty: 1,
+    filterAction: 2,
+    done: 3
+  }
 
-Filter.prototype.contains = function(val) {
-  var that = this;
-  return that.satisfies(function(obj) { return obj[that.property].indexOf(val) > -1; });
-};
+  function Clarify() { }
 
-Filter.prototype.equals = function(val) {
-  var that = this;
-  return that.satisfies(function(obj) { return obj[that.property] === val; });
-};
+  Clarify.select = function(record) { 
+   return new Query(record) 
+  };
 
-var state = {
-  initialized: 0,
-  filterProperty: 1,
-  filterAction: 2,
-  done: 3
-}
+  Clarify.Filter = Filter;
+  Clarify.Query = Query;
 
-function Clarify() { }
-
-Clarify.select = function(record) { 
- return new Query(record) 
-};
-
-Clarify.Filter = Filter;
-Clarify.Query = Query;
-
-module.exports = Clarify;
+  if (typeof module !== 'undefined' && typeof require !== 'undefined') {
+    module.exports = Clarify;
+  } else {
+    window.clarify = Clarify;
+  }
+})();
