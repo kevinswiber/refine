@@ -1,8 +1,8 @@
 {
   "author": "Kevin Swiber <kswiber@gmail.com>",
   "name": "clarify",
-  "description": "Clarify offers selection and filter options for JavaScript and JSON objects.",
-  "version": "0.0.0",
+  "description": "A lightweight, extensible object query tool for JavaScript / JSON objects",
+  "version": "0.0.1-alpha",
   "repository": {
     "url": "https://github.com/kevinswiber/clarify"
   },
