@@ -26,10 +26,7 @@
     this.filter.property = prop;
 
     if (transformation) {
-      this.filter.transformation = function(prop) {
-        this.query.state = state.propertyTransformation;
-        transformation(prop);
-      };
+      this.filter.transformation = transformation;
     }
 
     return this.filter;
