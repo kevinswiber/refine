@@ -2,6 +2,12 @@
 
 Clarify is a lightweight, extensible object query tool for JavaScript.
 
+Clarify offers:
+
+* A fluent, easy-to-read API
+* Custom-defined filters
+* Simplicity
+
 ## Example
 
 ```javascript
@@ -30,8 +36,32 @@ function split(delimiter) {
 ## Installation
 
 ```bash
-npm install clarify
+$ npm install clarify
 ```
+
+## Usage
+
+### clarify.select(collection)
+
+```select``` takes an array as the ```collection``` parameter and returns a ```Query``` object for chaining.
+
+### Query#where(property, [transformation])
+```Query#where``` creates a ```Filter``` object, with ```property``` as the property name to use when running a filter on the query.  The optional ```transformation``` parameter is a function that takes a single parameter.  This parameter is the value of the ```property```.  The transformation takes place prior to executing the filter action.  This method returns the newly created ```Filter``` object.
+
+
+### Filter.equals(val)
+
+Executes a comparison filter using the provided ```val``` string.
+
+### Filter.contains(val)
+
+Executes a contains filter using the provided ```val``` string.
+
+## Custom Filters
+
+Custom filters can be assigned using ```clarify.Filter.prototype```.
+
+
 
 ## License
 

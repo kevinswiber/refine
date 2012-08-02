@@ -7,6 +7,7 @@ var customer =
   .contains('http://x.io/rels/customer')
   .shift();
 
+
 var link = 
   select(customer.links)
   .where('rel', split(/\s/))
