@@ -51,16 +51,49 @@ $ npm install clarify
 
 ### Filter#equals(val)
 
-Executes a comparison filter using the provided ```val``` string.
+Executes an equality comparison filter using the provided ```val``` string.  Returns an Array.
 
 ### Filter#contains(val)
 
-Executes a contains filter using the provided ```val``` string.
+Executes a contains filter using the provided ```val``` string.  Returns an Array.
 
 ## Custom Filters
 
 Custom filters can be assigned using ```clarify.Filter.prototype```.
 
+Define ```this.action``` inside the filter to generate the filtered array.
+
+Example of a custom filter:
+
+```javascript
+var clarify = require('clarify');
+
+clarify.Filter.prototype.isInformational = function() {
+  this.action = function(collection) {
+    return collection.filter(function(item) {
+      if (item.class && item.class.indexOf('info') > -1) {
+        return item;
+      }
+    });
+  };
+
+  return this.run();
+};
+```
+
+Custom filter in action:
+
+```javascript
+var select = require('clarify').select;
+
+var informational = 
+  select(order.entities)
+  .where()
+  .isInformational();
+
+console.log(informational);
+
+```
 
 
 ## License
