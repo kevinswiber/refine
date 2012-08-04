@@ -46,18 +46,18 @@
     this.action = function(obj) {};
   }
 
-  Filter.prototype.run = function() {
-    var record = this.query.record;
+  Query.prototype.run = function() {
+    var record = this.record;
 
-    if (this.transformation) {
-      this.query._transition(state.propertyTransformation);
-      record = record.map(this._applyTransformation);
+    if (this.filter.transformation) {
+      this._transition(state.propertyTransformation);
+      record = record.map(this.filter._applyTransformation);
     }
 
-    this.query._transition(state.filterAction);
-    var res = this.action(record);
+    this._transition(state.filterAction);
+    var res = this.filter.action(record);
 
-    this.query._transition(state.done);
+    this._transition(state.done);
 
     return res;
   }
@@ -80,17 +80,7 @@
       return res;
     };
 
-    return this.run();
-  };
-
-  Filter.prototype.contains = function(val) {
-    var that = this;
-    return that.satisfies(function(obj) { return obj[that.property].indexOf(val) > -1; });
-  };
-
-  Filter.prototype.equals = function(val) {
-    var that = this;
-    return that.satisfies(function(obj) { return obj[that.property] === val; });
+    return this.query;
   };
 
   Filter.prototype._applyTransformation = function(item) {
