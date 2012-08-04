@@ -1,35 +1,57 @@
-var clarify = require('./');
-var select = clarify.select;
+var pan = require('./');
+var select = pan.select;
 var order = require('./order');
 
-extend(clarify);
+extend(pan);
 
 var customer =
-  select(order.entities)
-  .where('rel', split(/\s/))
-  .contains('http://x.io/rels/customer')
-  .shift();
+select(order.entities.map(splitMap))
+  .where('rel')
+    .contains('http://x.io/rels/customer')
+  .and('class')
+    .contains('info')
+.shift();
 
 var link = 
-  select(customer.links)
-  .where('rel', split(/\s/))
-  .contains('self')
-  .shift();
+select(customer.links.map(splitMap))
+  .where('rel')
+    .contains('self')
+.shift();
 
 console.log(link);
 
-function split(delimiter) {
-  return function(s) { return s.split(delimiter); };
+var record = { name: 'Kevin', age: 30 };
+
+var person =
+select(record)
+  .where('age')
+  .equals(30)
+
+console.log(person);
+
+function splitMap(obj) {
+  if (obj.rel) {
+    obj.rel = obj.rel.split(/\s/);
+  }
+
+  if (obj.class) {
+    obj.class = obj.class.split(/\s/);
+  }
+
+  return obj;
 }
 
-function extend(clarify) {
-  clarify.Filter.prototype.contains = function(val) {
+function extend(pan) {
+  pan.Filter.prototype.contains = function(val) {
     var that = this;
     var query = that.satisfies(function(obj) { return obj[that.property].indexOf(val) > -1; });
-    return query.run();
+
+    var arr = query.run();
+
+    return pan.querify(arr);
   };
 
-  clarify.Filter.prototype.equals = function(val) {
+  pan.Filter.prototype.equals = function(val) {
     var that = this;
     var query = that.satisfies(function(obj) { return obj[that.property] === val; });
     return query.run();

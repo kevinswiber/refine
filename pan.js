@@ -7,12 +7,35 @@
     done: 4
   }
 
+  function deepCopy(obj) {
+    if (Object.prototype.toString.call(obj) === '[object Array]') {
+      var out = [], i = 0, len = obj.length;
+      
+      for ( ; i < len; i++ ) {
+        out[i] = arguments.callee(obj[i]);
+      }
+      
+      return out;
+    }
+
+    if (typeof obj === 'object') {
+      var out = {}, i;
+      for ( i in obj ) {
+        out[i] = arguments.callee(obj[i]);
+      }
+
+      return out;
+    }
+
+    return obj;
+  }
+
   /* Query
    */
   function Query(record) {
-    if (Object.prototype.toString.call(record) !== '[object Array]') {
+    /*if (Object.prototype.toString.call(record) !== '[object Array]') {
       throw new TypeError();
-    }
+    }*/
 
     this.record = record;
     this.filter = null;
@@ -48,14 +71,21 @@
 
   Query.prototype.run = function() {
     var record = this.record;
+    var actionRecord;
 
     if (this.filter.transformation) {
       this._transition(state.propertyTransformation);
-      record = record.map(this.filter._applyTransformation);
+
+      if (Object.prototype.toString.call(record) === '[object Array]') {
+        actionRecord = record.map(this.filter._applyTransformation);
+      } else {
+        var recordCopy = deepCopy(record);
+        actionRecord = this.filter._applyTransformation(recordCopy);
+      }
     }
 
     this._transition(state.filterAction);
-    var res = this.filter.action(record);
+    var res = this.filter.action(actionRecord);
 
     this._transition(state.done);
 
@@ -69,11 +99,17 @@
 
     this.action = function(obj) {
       var res = [];
-      var len = obj.length >>> 0;
+      if (Object.prototype.toString.call(obj) === '[object Array]') {
+        var len = obj.length >>> 0;
 
-      for(var i = 0; i < len; i++) {
-        if (predicate(obj[i])) {
-          res.push(obj[i]);
+        for(var i = 0; i < len; i++) {
+          if (predicate(obj[i])) {
+            res.push(obj[i]);
+          }
+        }
+      } else {
+        if (predicate(obj)) {
+          res.push(obj);
         }
       }
 
@@ -91,20 +127,30 @@
     return item;
   };
 
-  /* Clarify
+  /* Pan
    */
-  function Clarify() { }
+  function Pan() { }
 
-  Clarify.select = function(record) { 
+  Pan.select = function(record) { 
    return new Query(record) 
   };
+  
+  Pan.querify = function(obj) {
+    obj.record = obj;
+    obj.where = Query.prototype.where;
+    obj.and = Query.prototype.where;
+    obj._transition = Query.prototype._transition;
+    obj.run = Query.prototype.run;
 
-  Clarify.Filter = Filter;
-  Clarify.Query = Query;
+    return obj;
+  };
+
+  Pan.Filter = Filter;
+  Pan.Query = Query;
 
   if (typeof module !== 'undefined' && typeof require !== 'undefined') {
-    module.exports = Clarify;
+    module.exports = Pan;
   } else {
-    window.clarify = Clarify;
+    window.pan = Pan;
   }
 })();

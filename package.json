@@ -6,7 +6,7 @@
   "repository": {
     "url": "https://github.com/kevinswiber/clarify"
   },
-  "main": "./clarify.js",
+  "main": "./pan.js",
   "dependencies": {},
   "devDependencies": {},
   "optionalDependencies": {},
