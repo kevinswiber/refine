@@ -17,6 +17,7 @@ var order = require('./order');
 
 var entities = order.entities.map(function(entity) {
   entity.rel = entity.rel.split(/\s/);
+  entity.class = entity.class.split(/\s/);
   return entity;
 });
 
