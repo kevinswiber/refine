@@ -11,26 +11,28 @@ Refine offers:
 ## Example
 
 ```javascript
-var select = require('refine').select;
+var refine = require('refine');
+var select = refine.select;
 var order = require('./order');
 
-var customer =
-  select(order.entities)
-  .where('rel', split(/\s/))
-  .contains('http://x.io/rels/customer')
-  .shift();
+var entities = order.entities.map(function(entity) {
+  entity.rel = entity.rel.split(/\s/);
+  return entity;
+});
 
-var link = 
-  select(customer.links)
-  .where('rel', split(/\s/))
-  .contains('self')
-  .shift();
+var customerInfo = 
+select(entities)
+  .where('rel')
+    .contains('http://x.io/rels/customer')
+  .and('class')
+    .contains('info')
+.map(function(customer) {
+  return customer.properties;
+})
+.shift();
 
-console.log(link);
-
-function split(delimiter) {
-  return function(s) { return s.split(delimiter); };
-}
+console.log(customerInfo);
+// { customerId: 'pj123', name: 'Peter Joseph' }
 ```
 
 ## Installation
@@ -45,8 +47,8 @@ $ npm install refine
 
 ```select``` takes an array as the ```collection``` parameter and returns a ```Query``` object for chaining.
 
-### Query#where(property, [transformation])
-```Query#where``` creates a ```Filter``` object, with ```property``` as the property name to use when running a filter on the query.  The optional ```transformation``` parameter is a function that takes a single parameter.  This parameter is the value of the ```property```.  The transformation takes place prior to executing the filter action.  This method returns the newly created ```Filter``` object.
+### Query#where(property)
+```Query#where``` creates a ```Filter``` object, with ```property``` as the property name to use when running a filter on the query. This method returns the newly created ```Filter``` object.
 
 
 ### Filter#equals(val)
@@ -77,7 +79,7 @@ refine.Filter.prototype.isInformational = function() {
     });
   };
 
-  return this.run();
+  return refine.Query.querify(this.query.run());
 };
 ```
 
@@ -89,9 +91,21 @@ var select = require('refine').select;
 var informational = 
   select(order.entities)
   .where()
-  .isInformational();
+  .isInformational()
+  .shift();
 
 console.log(informational);
+
+/*
+{ class: 'info customer',
+  rel: 'http://x.io/rels/customer',
+  properties: 
+   { customerId: 'pj123',
+     name: 'Peter Joseph' },
+  links: 
+   [ { rel: 'self',
+       href: 'http://api.x.io/customers/pj123' } ] }
+*/
 
 ```
 
