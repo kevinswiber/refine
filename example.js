@@ -1,5 +1,5 @@
-var pan = require('./');
-var select = pan.select;
+var refine = require('./');
+var select = refine.select;
 var order = require('./order');
 
 var entities = order.entities.map(function(entity) {
@@ -19,3 +19,4 @@ select(entities)
 .shift();
 
 console.log(customerInfo);
+// { customerId: 'pj123', name: 'Peter Joseph' }

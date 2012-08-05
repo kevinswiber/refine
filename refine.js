@@ -97,24 +97,24 @@
     return Query.querify(query.run());
   };
 
-  /* Pan
+  /* Refine
    */
-  function Pan() { }
+  function Refine() { }
 
-  Pan.select = function(record) { 
+  Refine.select = function(record) { 
    return new Query(record) 
   };
   
-  Pan.querify = function(obj) {
+  Refine.querify = function(obj) {
     return Query.querify(obj);
   };
 
-  Pan.Filter = Filter;
-  Pan.Query = Query;
+  Refine.Filter = Filter;
+  Refine.Query = Query;
 
   if (typeof module !== 'undefined' && typeof require !== 'undefined') {
-    module.exports = Pan;
+    module.exports = Refine;
   } else {
-    window.pan = Pan;
+    window.Refine = Refine;
   }
 })();

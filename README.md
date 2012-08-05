@@ -1,8 +1,8 @@
-# clarify
+# refine
 
-Clarify is a lightweight, extensible object query tool for JavaScript.
+Refine is a lightweight, extensible object query tool for JavaScript.
 
-Clarify offers:
+Refine offers:
 
 * A fluent, easy-to-read API
 * Custom-defined filters
@@ -11,7 +11,7 @@ Clarify offers:
 ## Example
 
 ```javascript
-var select = require('clarify').select;
+var select = require('refine').select;
 var order = require('./order');
 
 var customer =
@@ -36,12 +36,12 @@ function split(delimiter) {
 ## Installation
 
 ```bash
-$ npm install clarify
+$ npm install refine
 ```
 
 ## Usage
 
-### clarify.select(collection)
+### refine.select(collection)
 
 ```select``` takes an array as the ```collection``` parameter and returns a ```Query``` object for chaining.
 
@@ -59,16 +59,16 @@ Executes a contains filter using the provided ```val``` string.  Returns an Arra
 
 ## Custom Filters
 
-Custom filters can be assigned using ```clarify.Filter.prototype```.
+Custom filters can be assigned using ```refine.Filter.prototype```.
 
 Define ```this.action``` inside the filter to generate the filtered array.
 
 Example of a custom filter:
 
 ```javascript
-var clarify = require('clarify');
+var refine = require('refine');
 
-clarify.Filter.prototype.isInformational = function() {
+refine.Filter.prototype.isInformational = function() {
   this.action = function(collection) {
     return collection.filter(function(item) {
       if (item.class && item.class.indexOf('info') > -1) {
@@ -84,7 +84,7 @@ clarify.Filter.prototype.isInformational = function() {
 Custom filter in action:
 
 ```javascript
-var select = require('clarify').select;
+var select = require('refine').select;
 
 var informational = 
   select(order.entities)
